@@ -2,12 +2,17 @@ from fastapi import APIRouter
 from mod_produto.Produto import Produto
 import db
 from mod_produto.ProdutoModel import ProdutoDB
+from typing import Annotated
+from fastapi import Depends
+from security import get_current_active_user, User
 
-router = APIRouter()
+# router = APIRouter()
+# dependências de forma global
+router = APIRouter( dependencies=[Depends(get_current_active_user)] )
 
 # Criar os endpoints de Produto: GET, POST, PUT, DELETE
 @router.get("/produto/", tags=["Produto"])
-def get_produto():
+def get_produto(current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -22,7 +27,7 @@ def get_produto():
         session.close()
 
 @router.post("/produto/", tags=["Produto"])
-def post_produto(corpo: Produto):
+def post_produto(corpo: Produto, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -45,7 +50,7 @@ def put_produto(id: int, p: Produto):
     return {"msg": "put executado", "id": p.id_produto, "nome": p.nome, "descricao": p.descricao, "foto": p.valor_unitario, "valor_unitario": p.valor_unitario}, 201
 
 @router.put("/produto/{id}", tags=["Produto"])
-def put_cliente(id: int, corpo: Produto):
+def put_cliente(id: int, corpo: Produto, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -68,7 +73,7 @@ def put_cliente(id: int, corpo: Produto):
         session.close()
 
 @router.delete("/produto/{id}", tags=["Produto"])
-def delete_produto(id: int):
+def delete_produto(id: int, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 

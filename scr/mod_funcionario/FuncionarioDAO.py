@@ -2,18 +2,25 @@ from fastapi import APIRouter
 from mod_funcionario.Funcionario import Funcionario
 import db
 from mod_funcionario.FuncionarioModel import FuncionarioDB
+from typing import Annotated
+from fastapi import Depends
+from security import get_current_active_user, User
 
-router = APIRouter()
+# router = APIRouter()
+# dependências de forma global
+router = APIRouter( dependencies=[Depends(get_current_active_user)] )
 
 # Criar as rotas/endpoints: GET, POST, PUT, DELETE
 
 @router.get("/funcionario/", tags=["Funcionário"])
-def get_funcionario():
+def get_funcionario(current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
         # busca um com filtro
         dados = session.query(FuncionarioDB).filter(FuncionarioDB.id_funcionario == id).all()
+
+        print(current_user)
 
         return dados, 200
 
@@ -23,7 +30,7 @@ def get_funcionario():
         session.close()
 
 @router.post("/funcionario/", tags=["Funcionário"])
-def post_funcionario(corpo: Funcionario):
+def post_funcionario(corpo: Funcionario, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -43,7 +50,7 @@ def post_funcionario(corpo: Funcionario):
         session.close()
 
 @router.put("/funcionario/{id}", tags=["Funcionário"])
-def put_funcionario(id: int, corpo: Funcionario):
+def put_funcionario(id: int, corpo: Funcionario, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -68,7 +75,7 @@ def put_funcionario(id: int, corpo: Funcionario):
         session.close()
 
 @router.delete("/funcionario/{id}", tags=["Funcionário"])
-def delete_funcionario(id: int):
+def delete_funcionario(id: int, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -86,7 +93,7 @@ def delete_funcionario(id: int):
 
 # valida o cpf e senha informado pelo usuário
 @router.post("/funcionario/login/", tags=["Funcionário - Login"])
-def login_funcionario(corpo: Funcionario):
+def login_funcionario(corpo: Funcionario, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 

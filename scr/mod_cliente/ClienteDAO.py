@@ -2,12 +2,17 @@ from fastapi import APIRouter
 from mod_cliente.Cliente import Cliente
 import db
 from mod_cliente.ClienteModel import ClienteDB
+from typing import Annotated
+from fastapi import Depends
+from security import get_current_active_user, User
 
-router = APIRouter()
+# router = APIRouter()
+# dependências de forma global
+router = APIRouter( dependencies=[Depends(get_current_active_user)] )
 
 # Criar os endpoints de Cliente: GET, POST, PUT, DELETE
 @router.get("/cliente/", tags=["Cliente"])
-def get_cliente():
+def get_cliente(current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -22,7 +27,7 @@ def get_cliente():
         session.close()
 
 @router.post("/cliente/", tags=["Cliente"])
-def post_cliente(corpo: Cliente):
+def post_cliente(corpo: Cliente, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -41,7 +46,7 @@ def post_cliente(corpo: Cliente):
         session.close()
 
 @router.put("/cliente/{id}", tags=["Cliente"])
-def put_cliente(id: int, corpo: Cliente):
+def put_cliente(id: int, corpo: Cliente, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -63,7 +68,7 @@ def put_cliente(id: int, corpo: Cliente):
         session.close()
 
 @router.delete("/cliente/{id}", tags=["Cliente"])
-def delete_cliente(id: int):
+def delete_cliente(id: int, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
@@ -81,7 +86,7 @@ def delete_cliente(id: int):
 
 # verifica se o CPF informado já esta cadastrado, retornado os dados atuais caso já esteja
 @router.get("/cliente/cpf/{cpf}", tags=["Cliente - Valida CPF"])
-def cpf_cliente(cpf: str):
+def cpf_cliente(cpf: str, current_user:Annotated[User, Depends(get_current_active_user)]):
     try:
         session = db.Session()
 
