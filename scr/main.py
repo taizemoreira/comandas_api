@@ -22,4 +22,4 @@ if __name__ == "__main__":
 # rota padrão
 @app.get("/")
 def root():
-    return {"detail":"API Pastelaria - Taize Moreira Bueno", "Swagger UI": "http://127.0.0.1:8000/docs", "ReDoc": "http://127.0.0.1:8000/redoc" }
+    return {"detail":"API Pastelaria - Taize Bueno Moreira", "Swagger UI": "http://127.0.0.1:8000/docs", "ReDoc": "http://127.0.0.1:8000/redoc" }
