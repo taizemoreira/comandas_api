@@ -5,6 +5,7 @@ from settings import HOST, PORT, RELOAD
 from mod_funcionario import FuncionarioDAO
 from mod_cliente import ClienteDAO
 from mod_produto import ProdutoDAO
+import security
 
 app = FastAPI()
 
@@ -12,6 +13,7 @@ app = FastAPI()
 app.include_router(FuncionarioDAO.router)
 app.include_router(ClienteDAO.router)
 app.include_router(ProdutoDAO.router)
+app.include_router(security.router)
 
 if __name__ == "__main__":
     import uvicorn
@@ -20,4 +22,4 @@ if __name__ == "__main__":
 # rota padrão
 @app.get("/")
 def root():
-    return {"detail":"API Pastelaria", "Swagger UI": "http://127.0.0.1:8000/docs", "ReDoc": "http://127.0.0.1:8000/redoc" }
+    return {"detail":"API Pastelaria - Taize Moreira Bueno", "Swagger UI": "http://127.0.0.1:8000/docs", "ReDoc": "http://127.0.0.1:8000/redoc" }
