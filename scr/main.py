@@ -5,6 +5,7 @@ from settings import HOST, PORT, RELOAD
 from mod_funcionario import FuncionarioDAO
 from mod_cliente import ClienteDAO
 from mod_produto import ProdutoDAO
+from mod_comanda import ComandaDAO
 import security
 
 app = FastAPI()
@@ -13,7 +14,12 @@ app = FastAPI()
 app.include_router(FuncionarioDAO.router)
 app.include_router(ClienteDAO.router)
 app.include_router(ProdutoDAO.router)
+app.include_router(ComandaDAO.router)
 app.include_router(security.router)
+
+# cria, caso não existam, as tabelas de todos os modelos que encontrar na aplicação (importados)
+import db
+db.criaTabelas()
 
 if __name__ == "__main__":
     import uvicorn
